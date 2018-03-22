@@ -1,3 +1,5 @@
+using BattleshipSimulator
+
 # Create a random 10x10 board with the classic ship lengths
 M = layoutBoard(10,10)
 
