@@ -1,5 +1,4 @@
 using BattleshipSimulator
 using Base.Test
 
-# write your own tests here
-@test 1 == 2
+@test typeof(layoutBoard(10,10)) == Array{Int64,2}
