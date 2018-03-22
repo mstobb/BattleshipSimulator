@@ -35,6 +35,7 @@ The whole point is just exploration, so feel free to add new strategies or try d
 Here are the three currently implemented strategies for the same random board:
 
 - Random hunt: A random square is drawn each step.  This is very slow and generally takes hitting nearly every available square to win.
+
 ![random hunt.](https://raw.githubusercontent.com/mstobb/BattleshipSimulator/master/examples/anim_random.gif)
 
 - Search and Destroy: Once a ship is found, it and any connected ships are systemically hunted down and destroyed.  I think of this as the classic strategy used by most people.
