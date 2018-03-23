@@ -1,4 +1,4 @@
-# BattleshipSimulator
+# BattleshipSimulator.jl
 
 [![Build Status](https://travis-ci.org/mstobb/BattleshipSimulator.jl.svg?branch=master)](https://travis-ci.org/mstobb/BattleshipSimulator.jl)
 
@@ -7,6 +7,11 @@
 [![codecov.io](http://codecov.io/github/mstobb/BattleshipSimulator.jl/coverage.svg?branch=master)](http://codecov.io/github/mstobb/BattleshipSimulator.jl?branch=master)
 
 A fun package to create random board layouts and simulate play for the classic game Battleship with arbitrary grid and ship sizes.  This was inspired by the awesome [blog post](http://www.datagenetics.com/blog/december32011/) on Battleship by Nick Berry, but all of the code is original.
+
+To install this package, use the following command in Julia:
+```julia
+Pkg.clone("git:github.com/mstobb/BattleshipSimulator.jl.git")
+```
 
 Typical usage might be:
 ```julia
