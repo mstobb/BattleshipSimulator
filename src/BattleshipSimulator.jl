@@ -6,7 +6,7 @@ module BattleshipSimulator
 using Plots
 
 export layoutBoard, layoutBoard!, distributionBoard, distributionBoardHit
-export drawBoard, drawBoardComp, drawHit, animateGame
+export drawBoard, drawBoardComp, drawHit, animateGame, animateGameDist
 export playManyUniqueGames, playManySingleGames, playManyGames
 export randomHunter, targetHunter, distHunter
 
@@ -188,39 +188,71 @@ end
 
 function drawBoard(M; flatten=false)
     if flatten == true
-        plt = heatmap(M.>0,colorbar=false,aspectratio=:equal,axis=false,dpi=20,grid=true,gridcolor=:white,color=:blues)
+        plt = heatmap(M.>0,colorbar=false,aspectratio=:equal,axis=false,dpi=20,grid=true,color=:blues)
     else
-        plt = heatmap(M,colorbar=false,aspectratio=:equal,axis=false,dpi=20,grid=true,gridcolor=:white,color=:blues)
+        plt = heatmap(M,colorbar=false,aspectratio=:equal,dpi=20,axis=false,grid=true,color=:blues)
     end
     return plt
 end
 
+function drawBoard!(plt,M; flatten=false)
+    if flatten == true
+        heatmap!(plt,M.>0,colorbar=false,aspectratio=:equal,dpi=20,axis=false,grid=true)
+    else
+        heatmap!(plt,M,colorbar=false,aspectratio=:equal,dpi=20,axis=false,grid=true)
+    end
+end
+
 function drawBoardComp(M, D; name1="First", name2="Second", flatten=false)
     if flatten == true
-        p1 = heatmap(M.>0,colorbar=false,aspectratio=:equal,axis=false,dpi=20,title=name1)
-        p2 = heatmap(D.>0,colorbar=false,aspectratio=:equal,axis=false,dpi=20,title=name2)
+        p1 = heatmap(M.>0,colorbar=false,aspectratio=:equal,axis=false,title=name1,dpi=20,color=:blues)
+        p2 = heatmap(D.>0,colorbar=false,aspectratio=:equal,axis=false,title=name2,dpi=20)
     else
-        p1 = heatmap(M,colorbar=false,aspectratio=:equal,axis=false,dpi=20,title=name1)
-        p2 = heatmap(D,colorbar=false,aspectratio=:equal,axis=false,dpi=20,title=name2)
+        p1 = heatmap(M,colorbar=false,aspectratio=:equal,axis=false,title=name1,dpi=20,color=:blues)
+        p2 = heatmap(D,colorbar=false,aspectratio=:equal,axis=false,title=name2,dpi=20)
     end
     plt = plot(p1,p2, layout=(1,2), legend=false)
     return plt
 end
 
-function drawHit(target,M)
+function drawBoardComp!(plt,M, D; name1="First", name2="Second", flatten=false)
+
+    if flatten == true
+        heatmap(plt[1],M.>0,colorbar=false,aspectratio=:equal,axis=false,dpi=20,title=name1,color=:blues)
+        heatmap(plt[2],D.>0,colorbar=false,aspectratio=:equal,axis=false,dpi=20,title=name2)
+    else
+        heatmap(plt[1],M,colorbar=false,aspectratio=:equal,axis=false,title=name1,dpi=20,color=:blues)
+        heatmap(plt[2],D,colorbar=false,aspectratio=:equal,axis=false,title=name2,dpi=20)
+    end
+end
+
+function drawHit!(plt,target,M)
     targetSub = ind2sub(M,target)
     if M[target] > 0
-        plot!([targetSub[2]],[targetSub[1]],seriestype=:scatter, markersize = 15, markershape = :circle, c=RGB(1,0,0),legend=false,alpha=1)
+        plot!(plt,[targetSub[2]],[targetSub[1]],seriestype=:scatter, markersize = 15, markershape = :circle,dpi=20, c=RGB(1,0,0),legend=false,alpha=1)
     else
-        plot!([targetSub[2]],[targetSub[1]],seriestype=:scatter, markersize = 10, markershape = :xcross, c=RGB(1,0,0),legend=false,alpha=1)
+        plot!(plt,[targetSub[2]],[targetSub[1]],seriestype=:scatter, markersize = 10, markershape = :xcross,dpi=20, c=RGB(1,0,0),legend=false,alpha=1)
     end
 end
 
 function animateGame(M,hits)
-    drawBoard(M)
-    drawHit(hits[1],M)
+    plt = drawBoard(M)
+    drawHit!(plt,hits[1],M)
     anim = @animate for i = 1:length(hits)
-            drawHit(hits[i],M)
+            drawHit!(plt,hits[i],M)
+        end
+    return anim
+end
+
+function animateGameDist(M,hits; ships=[5,4,3,3,2])
+    S = zeros(Int64,size(M))
+    D = distributionBoard(S; ships=[5,4,3,3,2])
+    plt = drawBoardComp(M,D; name1 = "True Hidden Map", name2="Distribution of Possible Ships")
+    anim = @animate for i = 1:length(hits)
+            drawHit!(plt[1],hits[i],M)
+            S[hits[i]] = 1
+            distributionBoard!(D,S; ships=[5,4,3,3,2])
+            drawBoard!(plt[2],D)
         end
     return anim
 end
