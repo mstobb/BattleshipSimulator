@@ -10,7 +10,7 @@ A fun package to create random board layouts and simulate play for the classic g
 
 To install this package, use the following command in Julia:
 ```julia
-Pkg.clone("git:github.com/mstobb/BattleshipSimulator.jl.git")
+Pkg.clone("git://github.com/mstobb/BattleshipSimulator.jl.git")
 ```
 
 Typical usage might be:
